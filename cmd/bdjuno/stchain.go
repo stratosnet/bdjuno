@@ -40,10 +40,10 @@ func registerMessageAddressesParser(_ codec.Codec, cosmosMsg sdk.Msg) ([]string,
 	case *registertypes.MsgUpdateMetaNode:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
-	case *registertypes.MsgUpdateResourceNodeStake:
+	case *registertypes.MsgUpdateResourceNodeDeposit:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
-	case *registertypes.MsgUpdateMetaNodeStake:
+	case *registertypes.MsgUpdateMetaNodeDeposit:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
 	case *registertypes.MsgMetaNodeRegistrationVote:
