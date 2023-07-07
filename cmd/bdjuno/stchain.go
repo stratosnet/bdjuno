@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	junomessages "github.com/forbole/juno/v3/modules/messages"
+	junomessages "github.com/forbole/juno/v4/modules/messages"
 	pottypes "github.com/stratosnet/stratos-chain/x/pot/types"
 	//profilestypes "github.com/desmos-labs/desmos/v2/x/profiles/types"
 	registertypes "github.com/stratosnet/stratos-chain/x/register/types"
@@ -40,10 +40,10 @@ func registerMessageAddressesParser(_ codec.Codec, cosmosMsg sdk.Msg) ([]string,
 	case *registertypes.MsgUpdateMetaNode:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
-	case *registertypes.MsgUpdateResourceNodeStake:
+	case *registertypes.MsgUpdateResourceNodeDeposit:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
-	case *registertypes.MsgUpdateMetaNodeStake:
+	case *registertypes.MsgUpdateMetaNodeDeposit:
 		return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
 
 	case *registertypes.MsgMetaNodeRegistrationVote:
