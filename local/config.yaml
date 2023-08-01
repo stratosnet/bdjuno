@@ -1,16 +1,27 @@
 chain:
-    bech32_prefix: cosmos
-    modules: []
+    bech32_prefix: st
+    modules:
+        - modules
+        - messages
+        - auth
+        - bank
+        - consensus
+        - gov
+        - mint
+        - slashing
+        - staking
+        - distribution
+        - actions
 node:
     type: remote
     config:
         rpc:
             client_name: juno
-            address: http://host.docker.internal:26657
+            address: https://rpc-mesos.thestratos.org:443
             max_connections: 20
         grpc:
-            address: host.docker.internal:9090
-            insecure: true
+            address: https://grpc-mesos.thestratos.org:443
+            insecure: False
 parsing:
     workers: 1
     listen_new_blocks: true
@@ -18,6 +29,7 @@ parsing:
     parse_genesis: true
     start_height: 1
     average_block_time: 5s
+    genesis_file_path: /bdjuno/.bdjuno/genesis.json
 database:
     name: stratos_db
     host: postgres
@@ -32,5 +44,21 @@ database:
 logging:
     level: debug
     format: text
+pricefeed:
+    tokens:
+        - name: STOS
+          units:
+              - denom: wei
+                exponent: 0
+              - denom: gwei
+                exponent: 9
+              - denom: stos
+                exponent: 18
+        - name: TROS
+          units:
+              - denom: utros
+                exponent: 0
+              - denom: tros
+                exponent: 9
 actions:
     port: 3000
