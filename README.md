@@ -30,4 +30,13 @@ This will:
 1. Create a Docker container running a PostgreSQL database.
 2. Run all the tests using that database as support.
 
+## Local runner
 
+```shell
+$ docker-compose -f docker-compose.local.yml up -d
+```
+
+NOTE: You need to perform first time migrations
+```shell
+$ docker-compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
+```
