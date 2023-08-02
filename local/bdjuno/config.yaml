@@ -61,4 +61,4 @@ pricefeed:
               - denom: tros
                 exponent: 9
 actions:
-    port: 3000
+    port: 5005

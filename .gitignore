@@ -8,4 +8,5 @@ config.yaml
 
 # Coverage
 coverage.*
-!local/config.yaml
+!local/bdjuno/config.yaml
+!local/hasura/config.yaml
