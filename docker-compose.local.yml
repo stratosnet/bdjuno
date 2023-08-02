@@ -7,17 +7,19 @@ services:
       - "8080:8080"
     restart: unless-stopped
     environment:
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://stratos:stratos@postgres:5432/metadata_stratos_db
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://stratos:stratos@postgres:5432/stratos_db
       HASURA_GRAPHQL_DATABASE_URL: postgres://stratos:stratos@postgres:5432/stratos_db
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_DEV_MODE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
-      ACTION_BASE_URL: "{{bdjuno_endpoint}}"
+      ACTION_BASE_URL: "http://bdjuno:5005"
     extra_hosts:
       - host.docker.internal:host-gateway
     networks:
       - pg_network
+    volumes:
+      - ./hasura:/hasura
+      - ./local/hasura/config.yaml:/hasura/config.yaml
     logging:
       driver: "json-file"
       options:
@@ -28,6 +30,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "5005:5005"
+    expose:
+      - "5005"
     extra_hosts:
       - host.docker.internal:host-gateway
     # command: tail -f /dev/null
@@ -35,8 +41,7 @@ services:
     networks:
       - pg_network
     volumes:
-      - bdjuno_volume:/bdjuno/.bdjuno
-      - ./local/config.yaml:/bdjuno/.bdjuno/config.yaml
+      - ./local/bdjuno/config.yaml:/bdjuno/.bdjuno/config.yaml
       - ./local/genesis.json:/bdjuno/.bdjuno/genesis.json
     logging:
       driver: "json-file"
@@ -66,5 +71,4 @@ networks:
     driver: bridge
 
 volumes:
-  bdjuno_volume:
   pg_volume:
