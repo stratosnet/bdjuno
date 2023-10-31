@@ -6,6 +6,7 @@ import (
 
 	"github.com/forbole/bdjuno/v3/database"
 
+	potsource "github.com/forbole/bdjuno/v3/modules/pot/source"
 	"github.com/forbole/juno/v4/modules"
 )
 
@@ -17,13 +18,14 @@ var (
 
 // Module represents the module that allows to get the token prices
 type Module struct {
-	cfg *Config
-	cdc codec.Codec
-	db  *database.Db
+	cfg       *Config
+	cdc       codec.Codec
+	db        *database.Db
+	potSource potsource.Source
 }
 
 // NewModule returns a new Module instance
-func NewModule(cfg config.Config, cdc codec.Codec, db *database.Db) *Module {
+func NewModule(cfg config.Config, cdc codec.Codec, db *database.Db, potSource potsource.Source) *Module {
 	bz, err := cfg.GetBytes()
 	if err != nil {
 		panic(err)
@@ -35,9 +37,10 @@ func NewModule(cfg config.Config, cdc codec.Codec, db *database.Db) *Module {
 	}
 
 	return &Module{
-		cfg: pricefeedCfg,
-		cdc: cdc,
-		db:  db,
+		cfg:       pricefeedCfg,
+		cdc:       cdc,
+		db:        db,
+		potSource: potSource,
 	}
 }
 

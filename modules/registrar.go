@@ -29,6 +29,9 @@ import (
 	"github.com/forbole/bdjuno/v3/modules/modules"
 	"github.com/forbole/bdjuno/v3/modules/pricefeed"
 	"github.com/forbole/bdjuno/v3/modules/staking"
+
+	// stratos
+	pot "github.com/forbole/bdjuno/v3/modules/pot"
 )
 
 // UniqueAddressesParser returns a wrapper around the given parser that removes all duplicated addresses
@@ -82,6 +85,8 @@ func (r *Registrar) BuildModules(ctx registrar.Context) jmodules.Modules {
 	stakingModule := staking.NewModule(sources.StakingSource, slashingModule, cdc, db)
 	govModule := gov.NewModule(sources.GovSource, authModule, distrModule, mintModule, slashingModule, stakingModule, cdc, db)
 
+	potModule := pot.NewModule(r.parser, sources.PotSource, cdc, db)
+
 	return []jmodules.Module{
 		messages.NewModule(r.parser, cdc, ctx.Database),
 		telemetry.NewModule(ctx.JunoConfig),
@@ -96,8 +101,9 @@ func (r *Registrar) BuildModules(ctx registrar.Context) jmodules.Modules {
 		govModule,
 		mintModule,
 		modules.NewModule(ctx.JunoConfig.Chain, db),
-		pricefeed.NewModule(ctx.JunoConfig, cdc, db),
+		pricefeed.NewModule(ctx.JunoConfig, cdc, db, sources.PotSource),
 		slashingModule,
 		stakingModule,
+		potModule,
 	}
 }
