@@ -63,3 +63,13 @@ func queryCoinGecko(endpoint string, ptr interface{}) error {
 
 	return nil
 }
+
+// OverrideMarketCapWithSupply override with custom supply per price for dynamic calculation
+func OverrideMarketCapWithSupply(prices []types.TokenPrice, unitName string, supply int64) {
+	for i := range prices {
+		if prices[i].UnitName == unitName {
+			prices[i].MarketCap = int64(float64(supply) * prices[i].Price)
+			break
+		}
+	}
+}

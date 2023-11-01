@@ -12,6 +12,7 @@ chain:
         - staking
         - distribution
         - actions
+        - pricefeed
 node:
     type: remote
     config:
@@ -20,8 +21,8 @@ node:
             address: https://rpc-mesos.thestratos.org:443
             max_connections: 20
         grpc:
-            address: https://grpc-mesos.thestratos.org:443
-            insecure: False
+            address: grpc-mesos.thestratos.org:443
+            insecure: false
 parsing:
     workers: 1
     listen_new_blocks: true
@@ -31,12 +32,7 @@ parsing:
     average_block_time: 5s
     genesis_file_path: /bdjuno/.bdjuno/genesis.json
 database:
-    name: stratos_db
-    host: postgres
-    port: 5432
-    user: stratos
-    password: stratos
-    schema: public
+    url: "postgres://stratos:stratos@postgres:5432/stratos_db?sslmode=disable&search_path=public"
     max_open_connections: 1
     max_idle_connections: 1
     partition_size: 100000
@@ -54,11 +50,7 @@ pricefeed:
                 exponent: 9
               - denom: stos
                 exponent: 18
-        - name: TROS
-          units:
-              - denom: utros
-                exponent: 0
-              - denom: tros
-                exponent: 9
+                price_id: stratos
+
 actions:
     port: 5005
