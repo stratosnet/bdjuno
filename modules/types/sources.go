@@ -17,6 +17,7 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/forbole/juno/v5/node/local"
+	pottypes "github.com/stratosnet/stratos-chain/x/pot/types"
 
 	nodeconfig "github.com/forbole/juno/v5/node/config"
 
@@ -31,6 +32,9 @@ import (
 	mintsource "github.com/forbole/bdjuno/v4/modules/mint/source"
 	localmintsource "github.com/forbole/bdjuno/v4/modules/mint/source/local"
 	remotemintsource "github.com/forbole/bdjuno/v4/modules/mint/source/remote"
+	potsource "github.com/forbole/bdjuno/v4/modules/pot/source"
+	localpotsource "github.com/forbole/bdjuno/v4/modules/pot/source/local"
+	remotepotsource "github.com/forbole/bdjuno/v4/modules/pot/source/remote"
 	slashingsource "github.com/forbole/bdjuno/v4/modules/slashing/source"
 	localslashingsource "github.com/forbole/bdjuno/v4/modules/slashing/source/local"
 	remoteslashingsource "github.com/forbole/bdjuno/v4/modules/slashing/source/remote"
@@ -40,6 +44,7 @@ import (
 )
 
 type Sources struct {
+	PotSource      potsource.Source
 	BankSource     banksource.Source
 	DistrSource    distrsource.Source
 	GovSource      govsource.Source
@@ -71,6 +76,7 @@ func buildLocalSources(cfg *local.Details, encodingConfig *params.EncodingConfig
 	)
 
 	sources := &Sources{
+		PotSource:  localpotsource.NewSource(source, pottypes.QueryServer(nil)), // NOTE: Will not be used, implemnt only if needed
 		BankSource: localbanksource.NewSource(source, banktypes.QueryServer(app.BankKeeper)),
 		// DistrSource:    localdistrsource.NewSource(source, distrtypes.QueryServer(app.DistrKeeper)),
 		GovSource:      localgovsource.NewSource(source, govtypesv1.QueryServer(app.GovKeeper)),
@@ -110,6 +116,7 @@ func buildRemoteSources(cfg *remote.Details) (*Sources, error) {
 	}
 
 	return &Sources{
+		PotSource:      remotepotsource.NewSource(source, pottypes.NewQueryClient(source.GrpcConn)),
 		BankSource:     remotebanksource.NewSource(source, banktypes.NewQueryClient(source.GrpcConn)),
 		DistrSource:    remotedistrsource.NewSource(source, distrtypes.NewQueryClient(source.GrpcConn)),
 		GovSource:      remotegovsource.NewSource(source, govtypesv1.NewQueryClient(source.GrpcConn)),

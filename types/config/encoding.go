@@ -2,19 +2,15 @@ package config
 
 import (
 	"cosmossdk.io/simapp/params"
-	"github.com/cosmos/cosmos-sdk/std"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	stEncoding "github.com/stratosnet/stratos-chain/encoding"
 )
 
 // MakeEncodingConfig creates an EncodingConfig to properly handle all the messages
 func MakeEncodingConfig(managers []module.BasicManager) func() params.EncodingConfig {
 	return func() params.EncodingConfig {
-		encodingConfig := params.MakeTestEncodingConfig()
-		std.RegisterLegacyAminoCodec(encodingConfig.Amino)
-		std.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 		manager := mergeBasicManagers(managers)
-		manager.RegisterLegacyAminoCodec(encodingConfig.Amino)
-		manager.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+		encodingConfig := stEncoding.MakeEncodingConfig(manager)
 		return encodingConfig
 	}
 }

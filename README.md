@@ -30,4 +30,33 @@ This will:
 1. Create a Docker container running a PostgreSQL database.
 2. Run all the tests using that database as support.
 
+## Local runner
 
+```shell
+docker-compose -f docker-compose.local.yml up -d
+```
+
+NOTE: You need to perform first time after launch
+
+1. Run migrations
+```shell
+docker-compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
+```
+
+2. Load mesos genesis
+```shell
+curl https://raw.githubusercontent.com/stratosnet/stratos-chain-testnet/main/mesos-1/genesis.json > local/genesis.json
+```
+
+3. Launch hasura container
+```shell
+docker-compose -f docker-compose.local.yml exec hasura sh
+```
+
+and execute the following lines
+```shell
+apt-get update && apt-get install -y curl bash
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+
+hasura metadata apply --skip-update-check --project /hasura
+```
