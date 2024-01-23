@@ -1,9 +1,9 @@
 FROM golang:1.20-alpine AS builder
 RUN apk update
-RUN apk add --no-cache make git build-base gmp-dev flex bison
+RUN apk add --no-cache make git build-base gmp-dev flex bison curl
 
 ARG pbc_lib_ver=0.5.14
-RUN wget https://crypto.stanford.edu/pbc/files/pbc-${pbc_lib_ver}.tar.gz && \
+RUN curl -L https://crypto.stanford.edu/pbc/files/pbc-${pbc_lib_ver}.tar.gz > pbc-${pbc_lib_ver}.tar.gz && \
   tar xzvf pbc-${pbc_lib_ver}.tar.gz && \
   cd pbc-${pbc_lib_ver} && \
   ./configure && \
