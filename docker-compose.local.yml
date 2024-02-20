@@ -61,6 +61,7 @@ services:
       - pg_volume:/var/lib/postgresql/data
       - ./database/schema:/tmp/migrations
       - ./local/migrate_local.sh:/tmp/migrate.sh
+      - ./local/migrate_local_v5.sh:/tmp/migrate_v5.sh
     logging:
       driver: "json-file"
       options:

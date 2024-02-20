@@ -18,11 +18,11 @@ node:
   config:
     rpc:
       client_name: juno
-      address: https://rpc-mesos.thestratos.org:443
+      address: http://host.docker.internal:26657
       max_connections: 20
     grpc:
-      address: grpc-mesos.thestratos.org:443
-      insecure: false
+      address: host.docker.internal:9090
+      insecure: true
 parsing:
   workers: 1
   listen_new_blocks: true

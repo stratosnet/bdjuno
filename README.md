@@ -33,14 +33,19 @@ This will:
 ## Local runner
 
 ```shell
-docker-compose -f docker-compose.local.yml up -d
+docker compose -f docker-compose.local.yml up -d
 ```
 
 NOTE: You need to perform first time after launch
 
 1. Run migrations
 ```shell
-docker-compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
+docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
+```
+
+NOTE: If you on v012, also launch
+```shell
+docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate_v5.sh"
 ```
 
 2. Load mesos genesis
@@ -50,7 +55,7 @@ curl https://raw.githubusercontent.com/stratosnet/stratos-chain-testnet/main/mes
 
 3. Launch hasura container
 ```shell
-docker-compose -f docker-compose.local.yml exec hasura sh
+docker compose -f docker-compose.local.yml exec hasura sh
 ```
 
 and execute the following lines
