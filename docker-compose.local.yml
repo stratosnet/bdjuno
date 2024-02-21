@@ -1,0 +1,75 @@
+version: '3.6'
+services:
+  hasura:
+    container_name: bdjuno_hasura
+    image: hasura/graphql-engine:v2.0.4
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://stratos:stratos@postgres:5432/stratos_db
+      HASURA_GRAPHQL_DATABASE_URL: postgres://stratos:stratos@postgres:5432/stratos_db
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ACTION_BASE_URL: "http://bdjuno:5005"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - pg_network
+    volumes:
+      - ./hasura:/hasura
+      - ./local/hasura/config.yaml:/hasura/config.yaml
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "128m"
+  bdjuno:
+    container_name: bdjuno_bdjuno
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    expose:
+      - "5005"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    # command: tail -f /dev/null
+    command: bdjuno start --home /bdjuno/.bdjuno
+    networks:
+      - pg_network
+    volumes:
+      - ./local/bdjuno/config.yaml:/bdjuno/.bdjuno/config.yaml
+      - ./local/genesis.json:/bdjuno/.bdjuno/genesis.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "128m"
+  postgres:
+    container_name: bdjuno_postgres
+    restart: unless-stopped
+    image: postgres:12.0
+    environment:
+      POSTGRES_DB: stratos_db
+      POSTGRES_USER: stratos
+      POSTGRES_PASSWORD: stratos
+    networks:
+      - pg_network
+    volumes:
+      - pg_volume:/var/lib/postgresql/data
+      - ./database/schema:/tmp/migrations
+      - ./local/migrate_local.sh:/tmp/migrate.sh
+      - ./local/migrate_local_v5.sh:/tmp/migrate_v5.sh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "128m"
+
+networks:
+  pg_network:
+    driver: bridge
+
+volumes:
+  pg_volume:

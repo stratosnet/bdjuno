@@ -13,10 +13,10 @@ import (
 
 	"github.com/forbole/bdjuno/v4/types/config"
 
-	"cosmossdk.io/simapp"
-
 	"github.com/forbole/bdjuno/v4/database"
 	"github.com/forbole/bdjuno/v4/modules"
+
+	stchainapp "github.com/stratosnet/stratos-chain/app"
 )
 
 func main() {
@@ -55,7 +55,7 @@ func main() {
 // This should be edited by custom implementations if needed.
 func getBasicManagers() []module.BasicManager {
 	return []module.BasicManager{
-		simapp.ModuleBasics,
+		stchainapp.ModuleBasics,
 	}
 }
 
@@ -64,6 +64,7 @@ func getBasicManagers() []module.BasicManager {
 // This should be edited by custom implementations if needed.
 func getAddressesParser() messages.MessageAddressesParser {
 	return messages.JoinMessageParsers(
+		stchainMessageAddressesParser,
 		messages.CosmosMessageAddressesParser,
 	)
 }

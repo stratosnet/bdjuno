@@ -3,6 +3,7 @@ package staking
 import (
 	"fmt"
 
+	"cosmossdk.io/math"
 	"github.com/forbole/bdjuno/v4/modules/staking/keybase"
 	"github.com/forbole/bdjuno/v4/types"
 
@@ -255,7 +256,7 @@ func (m *Module) updateProposalValidatorStatusSnapshot(
 		snapshots[index] = types.NewProposalValidatorStatusSnapshot(
 			proposalID,
 			consAddr.String(),
-			validator.Tokens.Int64(),
+			getVotingPower(validator.Tokens, sdk.DefaultPowerReduction),
 			validator.Status,
 			validator.Jailed,
 			height,
@@ -288,7 +289,7 @@ func (m *Module) updateValidatorStatusAndVP(height int64, validators []stakingty
 			return err
 		}
 
-		votingPowers[index] = types.NewValidatorVotingPower(consAddr.String(), validator.Tokens.Int64(), height)
+		votingPowers[index] = types.NewValidatorVotingPower(consAddr.String(), getVotingPower(validator.Tokens, sdk.DefaultPowerReduction), height)
 
 		statuses[index] = types.NewValidatorStatus(
 			consAddr.String(),
@@ -317,4 +318,8 @@ func (m *Module) updateValidatorStatusAndVP(height int64, validators []stakingty
 	}
 
 	return nil
+}
+
+func getVotingPower(token math.Int, powerDeduction math.Int) int64 {
+	return token.Quo(powerDeduction).Int64()
 }
