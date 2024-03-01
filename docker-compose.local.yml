@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 services:
   hasura:
     container_name: bdjuno_hasura
@@ -60,8 +60,7 @@ services:
     volumes:
       - pg_volume:/var/lib/postgresql/data
       - ./database/schema:/tmp/migrations
-      - ./local/migrate_local.sh:/tmp/migrate.sh
-      - ./local/migrate_local_v5.sh:/tmp/migrate_v5.sh
+      - ./local/migrate_sql.sh:/tmp/migrate.sh
     logging:
       driver: "json-file"
       options:

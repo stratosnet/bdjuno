@@ -1,4 +1,5 @@
 # BDJuno
+
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/forbole/bdjuno/Tests)](https://github.com/forbole/bdjuno/actions?query=workflow%3ATests)
 [![Go Report Card](https://goreportcard.com/badge/github.com/forbole/bdjuno)](https://goreportcard.com/report/github.com/forbole/bdjuno)
 ![Codecov branch](https://img.shields.io/codecov/c/github/forbole/bdjuno/cosmos/v0.40.x)
@@ -14,10 +15,12 @@ a [PostgreSQL](https://www.postgresql.org/) database on top of which [GraphQL](h
 created using [Hasura](https://hasura.io/).
 
 ## Usage
+
 To know how to setup and run BDJuno, please refer to
 the [docs website](https://docs.bigdipper.live/cosmos-based/parser/overview/).
 
 ## Testing
+
 If you want to test the code, you can do so by running
 
 ```shell
@@ -27,41 +30,50 @@ $ make test-unit
 **Note**: Requires [Docker](https://docker.com).
 
 This will:
+
 1. Create a Docker container running a PostgreSQL database.
 2. Run all the tests using that database as support.
 
 ## Local runner
 
-```shell
-docker compose -f docker-compose.local.yml up -d
-```
+### Init setup
 
-NOTE: You need to perform first time after launch
+1. Launch postgres
 
-1. Run migrations
 ```shell
-docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
-```
-
-NOTE: If you on v012, also launch
-```shell
-docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate_v5.sh"
+docker compose -f docker-compose.local.yml up -d postgres
 ```
 
 2. Load mesos genesis
+
 ```shell
 curl https://raw.githubusercontent.com/stratosnet/stratos-chain-testnet/main/mesos-1/genesis.json > local/genesis.json
 ```
 
-3. Launch hasura container
+3. Run migrations (sql + some version fixes)
+
+```shell
+docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
+docker compose -f docker-compose.local.yml run --rm -v $(pwd)/local/migrate_juno.sh:/tmp/migrate.sh -v bdjuno sh -c "/tmp/migrate.sh"
+```
+
+4. Launch hasura container
+
 ```shell
 docker compose -f docker-compose.local.yml exec hasura sh
 ```
 
 and execute the following lines
+
 ```shell
 apt-get update && apt-get install -y curl bash
 curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
 hasura metadata apply --skip-update-check --project /hasura
+```
+
+5. Launch project
+
+```shell
+docker compose -f docker-compose.local.yml up -d
 ```
