@@ -54,7 +54,7 @@ curl https://raw.githubusercontent.com/stratosnet/stratos-chain-testnet/main/mes
 
 ```shell
 docker compose -f docker-compose.local.yml exec postgres sh "./tmp/migrate.sh"
-docker compose -f docker-compose.local.yml run --rm -v $(pwd)/local/migrate_juno.sh:/tmp/migrate.sh -v bdjuno sh -c "/tmp/migrate.sh"
+docker compose -f docker-compose.local.yml run --rm -v $(pwd)/local/migrate_juno.sh:/tmp/migrate.sh bdjuno sh -c "/tmp/migrate.sh"
 ```
 
 4. Launch hasura container
@@ -66,10 +66,7 @@ docker compose -f docker-compose.local.yml exec hasura sh
 and execute the following lines
 
 ```shell
-apt-get update && apt-get install -y curl bash
-curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-
-hasura metadata apply --skip-update-check --project /hasura
+apt-get update && apt-get install -y curl bash && curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash && hasura metadata apply --skip-update-check --project /hasura
 ```
 
 5. Launch project
