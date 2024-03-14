@@ -33,6 +33,7 @@ parsing:
   genesis_file_path: /bdjuno/.bdjuno/genesis.json
 database:
   url: "postgres://stratos:stratos@postgres:5432/stratos_db?sslmode=disable&search_path=public"
+  ssl_mode_enable: false
   max_open_connections: 1
   max_idle_connections: 1
   partition_size: 100000
