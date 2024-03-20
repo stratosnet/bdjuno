@@ -22,6 +22,7 @@ RUN make build
 FROM alpine:latest
 WORKDIR /bdjuno
 COPY --from=builder /go/src/github.com/forbole/bdjuno/build/bdjuno /usr/bin/bdjuno
+COPY --from=builder /go/src/github.com/forbole/bdjuno/database/schema /usr/share/bdjuno/database/schema
 COPY --from=builder /usr/local/lib/libpbc.so.1.0.0 /usr/local/lib/libpbc.so.1.0.0
 
 RUN apk add --no-cache gmp-dev
@@ -29,3 +30,4 @@ RUN cd /usr/local/lib && { ln -s -f libpbc.so.1.0.0 libpbc.so.1 || { rm -f libpb
   && cd /usr/local/lib && { ln -s -f libpbc.so.1.0.0 libpbc.so || { rm -f libpbc.so && ln -s libpbc.so.1.0.0 libpbc.so; }; }
 
 CMD [ "bdjuno" ]
+
