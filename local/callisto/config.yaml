@@ -1,0 +1,56 @@
+chain:
+  bech32_prefix: st
+  modules:
+    - modules
+    - messages
+    - auth
+    - bank
+    - consensus
+    - gov
+    - mint
+    - slashing
+    - staking
+    - distribution
+    - actions
+    - pricefeed
+node:
+  type: remote
+  config:
+    rpc:
+      client_name: juno
+      address: https://rpc-mesos.thestratos.org:443
+      max_connections: 20
+    grpc:
+      address: grpc-mesos.thestratos.org
+      insecure: false
+parsing:
+  workers: 1
+  listen_new_blocks: true
+  parse_old_blocks: true
+  parse_genesis: true
+  start_height: 1
+  average_block_time: 5s
+  genesis_file_path: /callisto/.callisto/genesis.json
+database:
+  url: "postgres://stratos:stratos@postgres:5432/stratos_db?sslmode=disable&search_path=public"
+  max_open_connections: 1
+  max_idle_connections: 1
+  partition_size: 100000
+  partition_batch: 1000
+logging:
+  level: debug
+  format: text
+pricefeed:
+  tokens:
+    - name: STOS
+      units:
+        - denom: wei
+          exponent: 0
+        - denom: gwei
+          exponent: 9
+        - denom: stos
+          exponent: 18
+          price_id: stratos
+
+actions:
+  port: 5005
