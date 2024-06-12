@@ -3,6 +3,7 @@ package pricefeed
 import (
 	"fmt"
 
+	"github.com/forbole/callisto/v4/modules/types"
 	parsecmdtypes "github.com/forbole/juno/v5/cmd/parse/types"
 	"github.com/forbole/juno/v5/types/config"
 	"github.com/spf13/cobra"
@@ -25,8 +26,13 @@ func priceCmd(parseConfig *parsecmdtypes.Config) *cobra.Command {
 			// Get the database
 			db := database.Cast(parseCtx.Database)
 
+			sources, err := types.BuildSources(config.Cfg.Node, parseCtx.EncodingConfig)
+			if err != nil {
+				panic(err)
+			}
+
 			// Build pricefeed module
-			pricefeedModule := pricefeed.NewModule(config.Cfg, parseCtx.EncodingConfig.Codec, db)
+			pricefeedModule := pricefeed.NewModule(config.Cfg, parseCtx.EncodingConfig.Codec, db, sources.PotSource)
 
 			err = pricefeedModule.RunAdditionalOperations()
 			if err != nil {

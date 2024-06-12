@@ -11,7 +11,11 @@ import (
 
 	"github.com/forbole/callisto/v4/modules/pricefeed/coingecko"
 	"github.com/forbole/callisto/v4/modules/utils"
+
+	sdkmath "cosmossdk.io/math"
 )
+
+var nativeTokenDecimals = sdkmath.NewInt(1e18)
 
 // RegisterPeriodicOperations implements modules.PeriodicOperationsModule
 func (m *Module) RegisterPeriodicOperations(scheduler *gocron.Scheduler) error {
@@ -47,11 +51,21 @@ func (m *Module) getTokenPrices() ([]types.TokenPrice, error) {
 		return nil, nil
 	}
 
+	metrics, err := m.potSource.Metrics()
+	if err != nil {
+		return nil, fmt.Errorf("error while getting metrics: %s", err)
+	}
+
 	// Get the tokens prices
+	totalSupply := metrics.TotalSupply.Sub(metrics.TotalMiningSupply).Add(metrics.TotalMinedTokens).Quo(nativeTokenDecimals).Int64()
+
 	prices, err := coingecko.GetTokensPrices(ids)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting tokens prices: %s", err)
 	}
+
+	// NOTE: Applied only for stos as coinngecko has not actual data
+	coingecko.OverrideMarketCapWithSupply(prices, "stos", totalSupply)
 
 	return prices, nil
 }

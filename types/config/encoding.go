@@ -1,17 +1,17 @@
 package config
 
 import (
-	"github.com/cosmos/cosmos-sdk/std"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/forbole/juno/v5/types/params"
+	stratosparams "github.com/stratosnet/stratos-chain/encoding/params"
 )
 
 // MakeEncodingConfig creates an EncodingConfig to properly handle all the messages
 func MakeEncodingConfig(managers []module.BasicManager) func() params.EncodingConfig {
 	return func() params.EncodingConfig {
 		encodingConfig := params.MakeTestEncodingConfig()
-		std.RegisterLegacyAminoCodec(encodingConfig.Amino)
-		std.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+		stratosparams.RegisterLegacyAminoCodec(encodingConfig.Amino)
+		stratosparams.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 		manager := mergeBasicManagers(managers)
 		manager.RegisterLegacyAminoCodec(encodingConfig.Amino)
 		manager.RegisterInterfaces(encodingConfig.InterfaceRegistry)
