@@ -1,6 +1,7 @@
 chain:
   bech32_prefix: st
   modules:
+    - message_type
     - modules
     - messages
     - auth
