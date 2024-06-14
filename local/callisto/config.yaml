@@ -14,6 +14,9 @@ chain:
     - distribution
     - actions
     - pricefeed
+    - feegrant
+    - upgrade
+    - pot
 node:
   type: remote
   config:
