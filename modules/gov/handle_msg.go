@@ -2,17 +2,14 @@ package gov
 
 import (
 	"fmt"
-	"strings"
 	"time"
-
-	"github.com/forbole/callisto/v4/types"
-	"google.golang.org/grpc/codes"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	govtypesv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govtypesv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	"github.com/forbole/callisto/v4/types"
 
 	juno "github.com/forbole/juno/v5/types"
 )
@@ -64,20 +61,21 @@ func (m *Module) handleSubmitProposalEvent(tx *juno.Tx, proposer string, events 
 	// Get the proposal
 	proposal, err := m.source.Proposal(tx.Height, proposalID)
 	if err != nil {
-		if strings.Contains(err.Error(), codes.NotFound.String()) {
-			// query the proposal details using the latest height stored in db
-			// to fix the rpc error returning code = NotFound desc = proposal x doesn't exist
-			block, err := m.db.GetLastBlockHeightAndTimestamp()
-			if err != nil {
-				return fmt.Errorf("error while getting latest block height: %s", err)
-			}
-			proposal, err = m.source.Proposal(block.Height, proposalID)
-			if err != nil {
-				return fmt.Errorf("error while getting proposal: %s", err)
-			}
-		} else {
+		// Fix:ST-301 - RPC not found response is: codespace sdk code 18: invalid request: failed to load state at height xxx
+		//if strings.Contains(err.Error(), codes.NotFound.String()) {
+		// query the proposal details using the latest height stored in db
+		// to fix the rpc error returning code = NotFound desc = proposal x doesn't exist
+		block, err := m.db.GetLastBlockHeightAndTimestamp()
+		if err != nil {
+			return fmt.Errorf("error while getting latest block height: %s", err)
+		}
+		proposal, err = m.source.Proposal(block.Height, proposalID)
+		if err != nil {
 			return fmt.Errorf("error while getting proposal: %s", err)
 		}
+		//} else {
+		//	return fmt.Errorf("error while getting proposal: %s", err)
+		//}
 	}
 
 	var addresses []types.Account
