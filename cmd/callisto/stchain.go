@@ -7,6 +7,7 @@ import (
 	"github.com/forbole/juno/v5/types"
 	pottypes "github.com/stratosnet/stratos-chain/x/pot/types"
 	registertypes "github.com/stratosnet/stratos-chain/x/register/types"
+	registertypes_v1_1 "github.com/stratosnet/stratos-chain/x/register/types/v1_1"
 	sdstypes "github.com/stratosnet/stratos-chain/x/sds/types"
 )
 
@@ -16,7 +17,29 @@ var stchainMessageAddressesParser = junomessages.JoinMessageParsers(
 	registerMessageAddressesParser,
 	potMessageAddressesParser,
 	sdsMessageAddressesParser,
+	registerV1_1MessageAddressesParser,
 )
+
+func registerV1_1MessageAddressesParser(tx *types.Tx) ([]string, error) {
+	txMsgs := tx.GetMsgs()
+	for _, cosmosMsg := range txMsgs {
+		switch msg := cosmosMsg.(type) {
+		case *registertypes_v1_1.MsgCreateResourceNode:
+			return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
+
+		case *registertypes_v1_1.MsgCreateMetaNode:
+			return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
+
+		case *registertypes_v1_1.MsgUpdateResourceNode:
+			return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
+
+		case *registertypes_v1_1.MsgUpdateMetaNode:
+			return []string{msg.NetworkAddress, msg.OwnerAddress}, nil
+		}
+
+	}
+	return nil, errors.New("Tx not supported: " + tx.RawLog)
+}
 
 // registerMessageAddressesParser represents a MessageAddressesParser for the x/register module
 func registerMessageAddressesParser(tx *types.Tx) ([]string, error) {
