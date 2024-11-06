@@ -32,6 +32,7 @@
 - "!include public_token_price_history.yaml"
 - "!include public_token_unit.yaml"
 - "!include public_transaction.yaml"
+- "!include public_latest_transactions.yaml"
 - "!include public_validator.yaml"
 - "!include public_validator_commission.yaml"
 - "!include public_validator_description.yaml"

@@ -1,26 +1,31 @@
 table:
-  name: message
+  name: latest_transactions
   schema: public
 object_relationships:
-- name: transaction
+- name: block
   using:
     manual_configuration:
       remote_table:
         schema: public
-        name: latest_transactions
-      insertion_order:
+        name: block
       column_mapping:
-        transaction_hash: hash
+        height: height
 select_permissions:
 - permission:
     allow_aggregations: false
     columns:
-    - transaction_hash
-    - index
-    - type
-    - value
-    - involved_accounts_addresses
+    - hash
     - height
+    - success
+    - messages
+    - memo
+    - signatures
+    - signer_infos
+    - fee
+    - gas_wanted
+    - gas_used
+    - raw_log
+    - logs
     filter: {}
     limit: 100
   role: anonymous
