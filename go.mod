@@ -18,7 +18,7 @@ require (
 	github.com/proullon/ramsql v0.1.3
 	github.com/rs/zerolog v1.32.0
 	github.com/spf13/cobra v1.8.0
-	github.com/stratosnet/stratos-chain v0.11.4-0.20240712192943-56122dd51997
+	github.com/stratosnet/stratos-chain v0.12.2-0.20241030142510-8623f062b1bf
 	github.com/stretchr/testify v1.9.0
 	github.com/tendermint/tendermint v0.35.9
 	google.golang.org/grpc v1.62.1
@@ -294,7 +294,7 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.1.1 // indirect
 	github.com/stratosnet/ledger-stratos-go v0.0.0-20230728214905-432bf09f4b6c // indirect
-	github.com/stratosnet/stratos-chain/api v0.0.0-20240711220534-c9cbef9fd8e4 // indirect
+	github.com/stratosnet/stratos-chain/api v0.0.0-20241030141759-bfb14748c4ba // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
@@ -366,5 +366,6 @@ require (
 replace (
 	// use stratos fork of cosmos-sdk: v0.47.x-stratos
 	github.com/cosmos/cosmos-sdk => github.com/stratosnet/cosmos-sdk v0.47.12-0.20240711204239-ae99645b490a
-	golang.org/x/exp => golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
+	// stick with compatible version or x/exp in v0.47.x line
+	golang.org/x/exp => golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb
 )
